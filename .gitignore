@@ -1,0 +1,30 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+
+# PHP / Composer (not currently used, but harmless to ignore proactively)
+/vendor/
+composer.lock
+
+# Local environment overrides — copy config/config.php to
+# config/config.local.php (gitignored) if you want per-machine DB creds
+# without touching the tracked default.
+config/config.local.php
+.env
+.env.*
+
+# Logs
+*.log
+error_log
+
+# Node (not used by this project, ignored defensively)
+node_modules/
+npm-debug.log*
+
+# Generated favicon working files, if regenerated locally and not desired in VCS
+# (kept tracked by default — remove this line if you'd rather not commit them)
+# assets/img/favicon-*.png
