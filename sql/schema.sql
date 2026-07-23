@@ -1,12 +1,16 @@
 -- =====================================================================
 -- 29 (Twenty-Nine) Card Game - Database Schema
 -- Traditional 4-player partnership game + configurable 3-player variant
+--
+-- This file does NOT create or select a database — shared hosting (e.g.
+-- StackCP) pre-provisions one with a fixed name you can't choose, and
+-- won't grant CREATE DATABASE privileges. Select (or create) your target
+-- database first, then run this file against it:
+--   - Local/XAMPP: CREATE DATABASE twentynine CHARACTER SET utf8mb4
+--       COLLATE utf8mb4_unicode_ci; then USE twentynine; then run this file.
+--   - phpMyAdmin (local or hosted): open your database, use the "Import"
+--       tab, and import this file directly — it runs in that DB's context.
 -- =====================================================================
-
-CREATE DATABASE IF NOT EXISTS twentynine
-  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-USE twentynine;
 
 -- ---------------------------------------------------------------------
 -- players: a lightweight guest identity, persisted client-side via a

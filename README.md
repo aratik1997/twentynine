@@ -29,8 +29,8 @@ A real-time, multiplayer web implementation of **29 (Twenty-Nine)**, the classic
 
 1. Copy this folder into your `htdocs` directory (e.g. `C:\xampp\htdocs\twentynine`).
 2. Start **Apache** and **MySQL** in the XAMPP control panel.
-3. Import the schema: open phpMyAdmin (or the `mysql` CLI) and run `sql/schema.sql`. It creates the `twentynine` database and all tables.
-4. Check `config/config.php` — the defaults (`root` / no password / `127.0.0.1:3306`) match a stock XAMPP install. Edit if your setup differs.
+3. Create a database (e.g. `twentynine`, `utf8mb4`/`utf8mb4_unicode_ci`), select it, then import `sql/schema.sql` into it via phpMyAdmin's Import tab (or `mysql <dbname> < sql/schema.sql` on the CLI). The file doesn't create or select a database itself, since hosted environments provision their own fixed DB name.
+4. Set your DB credentials in `config/config.local.php` (create it — it's gitignored, see `config/config.php` for the constants it should `define()`), or edit the defaults directly in `config/config.php` for local-only use.
 5. Visit `http://localhost/twentynine/` in your browser.
 6. Open the same URL in more browser tabs/devices (or share your LAN IP) to seat additional players — enter a name, then **Create a Table** or **Join** with the 6-character code.
 
