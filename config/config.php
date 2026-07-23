@@ -1,16 +1,23 @@
 <?php
 /**
- * Central configuration. Copy this file's values into your own
- * environment before deploying — defaults match a stock XAMPP install.
+ * Central configuration. Defaults below match a stock XAMPP install.
+ * For real credentials (remote hosting, etc.), create config/config.local.php
+ * (gitignored) defining the DB_* constants via define() — it's loaded first
+ * and takes priority, so the tracked defaults here never see real secrets.
  */
 
 declare(strict_types=1);
 
-const DB_HOST = '127.0.0.1';
-const DB_PORT = 3306;
-const DB_NAME = 'twentynine';
-const DB_USER = 'root';
-const DB_PASS = '';
+$__localConfig = __DIR__ . '/config.local.php';
+if (file_exists($__localConfig)) {
+    require_once $__localConfig;
+}
+
+if (!defined('DB_HOST')) define('DB_HOST', '127.0.0.1');
+if (!defined('DB_PORT')) define('DB_PORT', 3306);
+if (!defined('DB_NAME')) define('DB_NAME', 'twentynine');
+if (!defined('DB_USER')) define('DB_USER', 'root');
+if (!defined('DB_PASS')) define('DB_PASS', '');
 
 // Poll cadence hint shared with the client (ms). Kept in one place so
 // server-side rate limiting and client polling stay in sync.
