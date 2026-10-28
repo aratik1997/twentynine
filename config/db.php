@@ -27,5 +27,11 @@ function db(): PDO
         exit;
     }
 
+    // Databases imported before bots had difficulty levels lack this column.
+    $hasBotDifficulty = $pdo->query("SHOW COLUMNS FROM game_players LIKE 'bot_difficulty'")->fetch();
+    if (!$hasBotDifficulty) {
+        $pdo->exec("ALTER TABLE game_players ADD COLUMN bot_difficulty ENUM('easy','medium','hard') NULL AFTER is_bot");
+    }
+
     return $pdo;
 }

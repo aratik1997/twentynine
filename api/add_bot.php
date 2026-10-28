@@ -1,12 +1,17 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/_bootstrap.php';
+require_once __DIR__ . '/../includes/Bot.php';
 
 api_guard(function () {
     $player = require_player();
     $in = json_input();
     $gameId = (int)($in['game_id'] ?? 0);
     $wantSeat = array_key_exists('seat', $in) ? (int)$in['seat'] : null;
+    $difficulty = strtolower((string)($in['difficulty'] ?? 'medium'));
+    if (!in_array($difficulty, Bot::DIFFICULTIES, true)) {
+        throw new RuntimeException('Bot difficulty must be easy, medium or hard.');
+    }
 
     $pdo = db();
     $pdo->beginTransaction();
@@ -58,8 +63,8 @@ api_guard(function () {
         $botPlayerId = (int)$pdo->lastInsertId();
 
         $team = $game['variant'] === '4p' ? $freeSeat % 2 : null;
-        $pdo->prepare('INSERT INTO game_players (game_id, player_id, seat, team, is_host, role, status, is_bot) VALUES (?,?,?,?,0,\'player\',\'active\',1)')
-            ->execute([$gameId, $botPlayerId, $freeSeat, $team]);
+        $pdo->prepare('INSERT INTO game_players (game_id, player_id, seat, team, is_host, role, status, is_bot, bot_difficulty) VALUES (?,?,?,?,0,\'player\',\'active\',1,?)')
+            ->execute([$gameId, $botPlayerId, $freeSeat, $team, $difficulty]);
 
         post_chat($pdo, $gameId, null, 'System', $nickname . ' joined the table.', true);
 

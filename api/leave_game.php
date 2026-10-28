@@ -41,7 +41,7 @@ api_guard(function () {
             $game['settings'] = json_decode($game['settings_json'] ?? json_encode($game['settings']), true) ?: $game['settings'];
             $activeMap = active_seat_map($pdo, $gameId);
             $before = $state['phase'];
-            $state = resolve_absent_turns($game, $state, $activeMap);
+            $state = resolve_absent_turns($game, $state, $activeMap, bot_seat_map($pdo, $gameId));
             save_state($pdo, $gameId, $state);
             if ($before !== 'round_end' && $state['phase'] === 'round_end') {
                 apply_round_result($pdo, $gameId, $state);

@@ -214,7 +214,7 @@ function run_seat_action(int $gameId, callable $mutator): void
         }
 
         $activeMap = active_seat_map($pdo, $gameId);
-        $state = resolve_absent_turns($game, $state, $activeMap);
+        $state = resolve_absent_turns($game, $state, $activeMap, bot_seat_map($pdo, $gameId));
 
         save_state($pdo, $gameId, $state);
         if ($wasPhase !== 'round_end' && $state['phase'] === 'round_end') {

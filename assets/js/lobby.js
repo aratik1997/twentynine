@@ -142,7 +142,7 @@
           <div class="seat-avatar" style="background:${p.avatar_color || SEAT_COLORS_FALLBACK}">${p.is_bot ? '🤖' : p.nickname.slice(0,1).toUpperCase()}</div>
           <div class="seat-meta">
             <div class="seat-name">${escapeHtml(p.nickname)}${p.is_host ? ' <span class="host-crown" title="Host">👑</span>' : ''}${isMe ? ' <span class="muted">(you)</span>' : ''}</div>
-            <div class="seat-tag">Seat ${s + 1}${game.variant === '4p' ? ' · Team ' + (p.team + 1) : ''}${p.is_bot ? ' · BOT' : ''}</div>
+            <div class="seat-tag">Seat ${s + 1}${game.variant === '4p' ? ' · Team ' + (p.team + 1) : ''}${p.is_bot ? ' · BOT' + (p.bot_difficulty ? ' (' + p.bot_difficulty + ')' : '') : ''}</div>
           </div>
           ${canKick ? `<button class="btn danger small icon-only kick-btn" title="Kick" data-pid="${p.player_id}">✕</button>` : ''}
         `;
@@ -175,7 +175,8 @@
     seatGrid.querySelectorAll('.add-bot-btn').forEach((btn) => {
       btn.addEventListener('click', async () => {
         const seat = parseInt(btn.dataset.seat, 10);
-        try { await Api.post('add_bot.php', { game_id: gameId, seat }); }
+        const difficulty = document.getElementById('botDifficulty')?.value || 'medium';
+        try { await Api.post('add_bot.php', { game_id: gameId, seat, difficulty }); }
         catch (e) { toast(e.message, { warn: true }); }
       });
     });

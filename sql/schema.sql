@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS game_players (
   role          ENUM('player','spectator') NOT NULL DEFAULT 'spectator',
   status        ENUM('active','left','kicked') NOT NULL DEFAULT 'active',
   is_bot        TINYINT(1) NOT NULL DEFAULT 0,     -- filled by host to seat an AI player
+  bot_difficulty ENUM('easy','medium','hard') NULL, -- how well a bot plays (bots only)
   score         INT NOT NULL DEFAULT 0,            -- cumulative score (marks or numeric)
   joined_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   last_seen_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

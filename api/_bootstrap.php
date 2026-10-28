@@ -17,7 +17,7 @@ function api_guard(callable $fn): void
 }
 
 /** Active seat => player_id map for autoplay resolution. Bot seats are
- *  excluded so resolve_absent_turns() always auto-plays their turns. */
+ *  excluded here; they're handled by bot_seat_map(). */
 function active_seat_map(PDO $pdo, int $gameId): array
 {
     $stmt = $pdo->prepare("SELECT seat, player_id FROM game_players WHERE game_id = ? AND status = 'active' AND is_bot = 0 AND seat IS NOT NULL");
@@ -25,6 +25,18 @@ function active_seat_map(PDO $pdo, int $gameId): array
     $map = [];
     foreach ($stmt->fetchAll() as $r) {
         $map[(int)$r['seat']] = (int)$r['player_id'];
+    }
+    return $map;
+}
+
+/** Bot seat => difficulty map for resolve_absent_turns(). */
+function bot_seat_map(PDO $pdo, int $gameId): array
+{
+    $stmt = $pdo->prepare("SELECT seat, bot_difficulty FROM game_players WHERE game_id = ? AND status = 'active' AND is_bot = 1 AND seat IS NOT NULL");
+    $stmt->execute([$gameId]);
+    $map = [];
+    foreach ($stmt->fetchAll() as $r) {
+        $map[(int)$r['seat']] = in_array($r['bot_difficulty'], Bot::DIFFICULTIES, true) ? $r['bot_difficulty'] : 'medium';
     }
     return $map;
 }

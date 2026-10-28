@@ -19,7 +19,7 @@ api_guard(function () {
         if ($state && in_array($state['phase'], ['bidding', 'trump_select', 'playing'], true)) {
             $activeMap = active_seat_map($pdo, $gameId);
             $before = $state;
-            $state = resolve_absent_turns($game, $state, $activeMap);
+            $state = resolve_absent_turns($game, $state, $activeMap, bot_seat_map($pdo, $gameId));
             if ($state !== $before) {
                 save_state($pdo, $gameId, $state);
                 if ($before['phase'] !== 'round_end' && $state['phase'] === 'round_end') {
@@ -42,6 +42,7 @@ api_guard(function () {
                 'role'         => $p['role'],
                 'is_host'      => (bool)$p['is_host'],
                 'is_bot'       => (bool)$p['is_bot'],
+                'bot_difficulty' => $p['bot_difficulty'],
                 'score'        => (int)$p['score'],
             ];
         }, array_values(array_filter(game_players_of($gameId), fn($p) => $p['status'] === 'active')));

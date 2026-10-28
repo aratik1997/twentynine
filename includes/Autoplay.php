@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/Bot.php';
+
 /**
  * When a seated player leaves or is kicked mid-round, the round must
  * still be able to finish so the table isn't stuck forever. This walks
@@ -12,8 +14,12 @@ declare(strict_types=1);
  * $activeSeatPlayerIds: seat => player_id for seats occupied by players
  * whose game_players.status = 'active'. Any seat NOT in this map is
  * treated as absent and auto-resolved.
+ *
+ * $botSeats: seat => difficulty for bot-occupied seats. A bot moves like a
+ * person: it plays on its own turn once its thinking time has passed (see
+ * Bot::isDue), and never through the instant absent-player path below.
  */
-function resolve_absent_turns(array $game, array $state, array $activeSeatPlayerIds): array
+function resolve_absent_turns(array $game, array $state, array $activeSeatPlayerIds, array $botSeats = []): array
 {
     $guard = 0;
     while ($guard++ < 64) {
@@ -23,6 +29,13 @@ function resolve_absent_turns(array $game, array $state, array $activeSeatPlayer
         $turnSeat = $state['turn_seat'];
         if ($turnSeat === null) {
             break; // no turn pending
+        }
+        if (isset($botSeats[$turnSeat])) {
+            if (!Bot::isDue($state, $botSeats[$turnSeat])) {
+                break; // the bot is still "thinking"; a later poll will move it
+            }
+            $state = Bot::act($game, $state, $turnSeat, $botSeats[$turnSeat]);
+            continue; // the next seat may be another bot, which waits for its own turn
         }
         $isAbsent = !isset($activeSeatPlayerIds[$turnSeat]);
         $timedOut = !$isAbsent && $state['turn_started_at'] !== null

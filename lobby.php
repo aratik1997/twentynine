@@ -37,6 +37,15 @@ $__pageTitle = 'Lobby — ' . htmlspecialchars($game['name']) . ' (' . $code . '
           <h2 id="tableName">Table</h2>
           <span class="chip" id="variantChip">—</span>
         </div>
+        <div class="bot-level-row">
+          <label class="muted" style="font-size:.85rem">Bot level
+            <select id="botDifficulty" class="btn small secondary">
+              <option value="easy">Easy</option>
+              <option value="medium" selected>Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </label>
+        </div>
         <div class="seat-grid" id="seatGrid"></div>
         <div class="spectator-list" id="spectatorList"></div>
         <div class="row mt-1 between">
